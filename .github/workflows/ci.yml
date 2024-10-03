@@ -40,7 +40,7 @@ jobs:
         run: mvn verify  # Cucumber raporları için 'verify' aşaması çalıştırılır
 
       - name: Upload Cucumber Reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cucumber-reports
           path: target/cucumber-reports  # Cucumber raporlarının bulunduğu dizin
