@@ -1,0 +1,49 @@
+name: Java Selenium Cucumber CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install dependencies with Maven
+        run: mvn install
+
+      - name: Run Tests
+        run: mvn test
+
+      - name: Generate Cucumber Report
+        run: mvn verify  # Cucumber raporları için 'verify' aşaması çalıştırılır
+
+      - name: Upload Cucumber Reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: cucumber-reports
+          path: target/cucumber-reports  # Cucumber raporlarının bulunduğu dizin
+
+      - name: Build Project
+        run: mvn package
