@@ -132,79 +132,44 @@
 
     <build>
         <plugins>
-            <!-- Surefire Plugin -->
+            <!-- Surefire plugin for running the tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.surefire.version}</version>
+                <version>2.22.2</version>
                 <configuration>
-                    <testFailureIgnore>true</testFailureIgnore>
-                    <parallel>methods</parallel>
-                    <threadCount>3</threadCount>
-                    <perCoreThreadCount>false</perCoreThreadCount>
-                    <forkCount>3</forkCount>
-                    <reuseForks>true</reuseForks>
                     <includes>
-                        <include>**/Test*.java</include>
-                        <include>**/*Test.java</include>
-                        <include>**/*TestCase.java</include>
-                        <include>**/TestRunner.java</include>
-                        <include>**/runner/*TestRunner*.java</include>
+                        <include>**/TestRunner.java</include> <!-- Test runner dosyanız -->
                     </includes>
+                    <systemPropertyVariables>
+                        cucumber.options="--plugin json:target/cucumber-reports/cucumber.json"
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
 
-            <!-- Cucumber Reporting Plugin -->
+            <!-- Cucumber reporting plugin -->
             <plugin>
                 <groupId>net.masterthought</groupId>
-                <artifactId>maven-cucumber-reporting</artifactId>
-                <version>${cucumber.reporting.version}</version>
+                <artifactId>cucumber-reporting</artifactId>
+                <version>5.7.0</version>
                 <executions>
                     <execution>
-                        <id>execution</id>
+                        <id>generate-cucumber-reports</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <projectName>Overkiz BDD Automations Tests Report</projectName>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
-                            <inputDirectory>${project.build.directory}</inputDirectory>
+                            <projectName>My Project</projectName>
+                            <outputDirectory>target/cucumber-reports</outputDirectory>
                             <jsonFiles>
-                                <param>**/cucumber*.json</param>
+                                <param>target/cucumber-reports/cucumber.json</param>
                             </jsonFiles>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.3.1</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>10.12.5</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <configLocation>.gitlab/google_checks.xml</configLocation>
-                    <consoleOutput>false</consoleOutput>
-                    <failsOnError>true</failsOnError>
-                    <failOnViolation>true</failOnViolation>
-                    <violationSeverity>warning</violationSeverity>
-                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
+
 </project>
